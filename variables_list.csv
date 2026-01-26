@@ -1,0 +1,3 @@
+variable_name, full_path, aggregation_method, weight
+pop21, D:/projdir/Aggregator/data/population/pop_2021_1km_ARDECO.tif, sum, 0,
+pwd21, D:/projdir/Aggregator/data/population/pop_2021_1km_ARDECO.tif, mean, 1,

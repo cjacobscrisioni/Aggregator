@@ -1,0 +1,140 @@
+container aggregator {
+	
+	container ModelParameters {
+		// variable set as defined in a csv file
+		parameter<string> variable_set:= '%projdir%/variables_list.csv';
+		
+		// boundary set needs to be a single vector file, in LambertEA projection.
+		parameter<string> boundary_set:= '%projdir%/data/boundaries/fras_fuas__x1.shp';
+		parameter<string> boundary_code:= 'code';
+		
+		// population grid used as optional weight, in LambertEA projection, 1000m.
+		parameter<string> weight_set:= '%projdir%/data/population/pop_2021_1km_ARDECO.tif';
+	}
+	
+	unit<dpoint> LambertEA: 	Descr = "ETRS_1989_LAEA_52N_10E" // "coords from SW to NE";
+		,	SpatialReference = "EPSG:3035"; // EPSG code for Lamber EA		
+	
+	unit<wpoint> tg:= w, descr = "raster definition by which all datalayers are loaded into a general framework" {
+		parameter<dpoint> pf:= GetProjectionFactor(.) / point_xy(2d, 2d, dpoint)[LambertEA];
+		attribute<LambertEA> centroid:= id(.)[LambertEA] + (GetProjectionFactor(.) / point_xy(2d, 2d, dpoint))[LambertEA];
+		attribute<boundaries> bd_rel:= point_in_polygon(centroid, boundaries/Geometry), IntegrityCheck = " all_single_zoneid";
+	}
+	
+	// treat the target boundaries system. Requisites: polygon, LambertEA, every single geometry must have a unique identifier in the field defined through boundary_code
+	unit<uint32> boundaries: storagename = "= ModelParameters/boundary_set", storagereadonly = "True", storagetype = "gdal.vect", dialogdata = "LambertEA" {
+		attribute<string> ZoneId:= ='string('+ModelParameters/boundary_code+')';
+		attribute<unique_codes> uc_rel:= rlookup(ZoneId, unique_codes/Values);
+		
+		unit<uint32> unique_codes:= unique(ZoneId) {
+			attribute<uint32> occurrence:= pcount(boundaries/uc_rel);
+			attribute<bool>   single_zoneid:= occurrence = 1;
+		}
+	}
+	parameter<bool> all_single_zoneid:= all(boundaries/unique_codes/single_zoneid), descr = "Controls whether the values in zoneid are unique (ie, no two features with the same zoneid)";
+	
+	// population grid used to weigh the other grids, also doubles as 
+	unit<wpoint> w: storagename = "= ModelParameters/weight_set", storagereadonly = "true", storagetype = "gdal.grid", dialogdata = "LambertEA" {
+		attribute<float32> GridData;
+		attribute<float32> ReadData (tg);
+	}
+	
+	// list of variables used for inputs and calculations
+	unit<uint32> variables_list: storagename = "= ModelParameters/variable_set", storagetype = "gdal.vect", storagereadonly = "true" {
+		
+		attribute<string> label:= asitemname(variable_name);
+		attribute<unique_names> unique_name_rel:= rlookup(label, unique_names/Values);
+		attribute<unique_paths> input_layer_rel:= rlookup(full_path, unique_paths/Values), IntegrityCheck = "all_single_variable_names";
+		
+		unit<uint32> unique_names:= unique(label)
+		{
+			attribute<uint32> occurrence:= pcount(variables_list/unique_name_rel);
+			attribute<bool>   single_name:= occurrence = 1;
+		}
+		unit<uint32> unique_paths:= unique(full_path)
+		{
+			attribute<string> internal_name:= 'f_'+string(id(.));
+		}
+		
+	}
+	parameter<bool> all_single_variable_names:= all(variables_list/unique_names/single_name), descr = "Controls whether there are no duplicate variable names in the variables list.";
+	
+	// load files needed in the aggregation
+	container load_tiffs:= for_each_ne(variables_list/unique_paths/internal_name, 'T_loadtiffs_float32('+quote(variables_list/unique_paths/Values)+', tg)');
+	
+	// aggregation operation
+	container aggregate_values:= for_each_ne(variables_list/label, 'T_aggregate_values('+string(id(variables_list))+', tg)'), IntegrityCheck = "all_single_variable_names";
+	
+	container export_set:= for_each_nedv(variables_list/label, 'aggregate_values/'+variables_list/label+'/result', boundaries, float32) {
+		attribute<string> ZoneId (boundaries):= boundaries/ZoneId;
+	}
+	
+	container Export_Data 
+	{
+	
+		// assume ExportDomain is a configured domain unit with two attributes as subitems: id & dist
+		parameter<string> fieldseparator := ';';
+		parameter<string> fieldnamelist:= 'ZoneId'+fieldseparator+aslist(variables_list/label, fieldseparator);
+		parameter<string> filename       := '%Projdir%/Store/Variables.csv';
+
+		unit<uint32> field := range(uint32, 0,strcount(fieldnamelist, fieldseparator) +1)
+		{
+			attribute<string> name := ReadArray(fieldnamelist, ., string, 0);
+		}
+
+		parameter<string> newline := '\n';
+		parameter<string> header  := fieldnamelist;
+		attribute<string> body (boundaries) := = AsList(
+			+'makedefined(string(export_set/' + field/name + '),'+quote('-9999')+')',' + '+quote(fieldseparator)+' +'
+			);
+		 
+		  parameter<string> result := header + newline + AsList(body, newline)
+		  ,  StorageName = "= filename"
+		  ,  StorageType = "str";
+	}
+	
+	template T_aggregate_values {
+		parameter<variables_list> in_var;
+		unit<wpoint> unit_def:= tg;
+		
+		container file_container:= ='load_tiffs/'+variables_list/unique_paths/internal_name[variables_list/input_layer_rel[in_var]];
+		
+		parameter<string> operation:= lowercase(trim(variables_list/aggregation_method[in_var]));
+		parameter<bool> weighting:= bool(trim(variables_list/weight[in_var]));
+		
+		attribute<float32> values (tg):= float32(file_container/inFile/ReadData);
+
+		attribute<float32> sum (boundaries):= sum(values, unit_def/bd_rel);
+		attribute<float32> sum_w (boundaries):= sum(w/ReadData, unit_def/bd_rel);
+		attribute<float32> arith_mean (boundaries):= mean(values, unit_def/bd_rel);
+		attribute<float32> harm_mean (boundaries):= pcount(unit_def/bd_rel)[float32] / sum(1f / values, unit_def/bd_rel);
+		attribute<float32> w_arith_mean (boundaries):= sum(w/ReadData * values, unit_def/bd_rel) / sum_w;
+		attribute<float32> w_harm_mean (boundaries):= sum_w / sum(w/ReadData / values, unit_def/bd_rel);
+		
+		attribute<float32> result (boundaries):= switch(
+			  case(operation='sum', sum)
+			, case((operation='mean' || operation='average' || operation = 'arith_mean') && !weighting, arith_mean)
+			, case((operation='mean' || operation='average' || operation = 'arith_mean') && weighting, w_arith_mean)
+			, case((operation='harm' || operation='harm_mean') && !weighting, harm_mean)
+			, case((operation='harm' || operation='harm_mean') && weighting, w_harm_mean)
+			, sum);
+		
+	}
+	
+	template T_loadtiffs_float32
+	{
+		parameter<string> inpath;
+		unit<wpoint> griddef:= tg;
+		
+		unit<wpoint> inFile: storagename = "= trim(inpath)", storagereadonly = "true", storagetype = "gdal.grid", dialogdata = "LambertEA" 
+		{
+			attribute<float32> GridData;
+			attribute<float32> ReadData (griddef);
+		}
+		
+		
+	
+	}
+
+	
+}
