@@ -18,7 +18,7 @@ ACCESS_PRIM_SCHOOL;D:\projdir\Aggregator\inputs\espon_primary_schools_2021_etrs8
 retail_pop_15m;D:\projdir\Aggregator\inputs\espon_retail_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
 ACCESS_SEC_SCHOOL;D:\projdir\Aggregator\inputs\espon_secondary_schools_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
 ACCESS_TRAIN_STA;D:\projdir\Aggregator\inputs\RAIL_STOPS_2019_PT_int_tt.tif;grid;mean;1;In_Values < 15f
-eter_univ_20260217_tt;D:\projdir\Aggregator\inputs\ETER_EU27_20260217_int_tt.tif;grid;mean;1;
+eter_univ_20260217_avg_tt;D:\projdir\Aggregator\inputs\ETER_EU27_20260217_int_tt.tif;grid;mean;1;
 ACCESS_UNIVERSITY;D:\projdir\Aggregator\inputs\ETER_EU27_20260217_int_tt.tif;grid;mean;1;In_Values < 30f
 POT_ACCESS;D:\projdir\Aggregator\inputs\rel_ai.tif;grid;mean;1;
 REG_CENTER_MAX;D:\projdir\Aggregator\inputs\Settlements_v5.shp;point;max;0;maxl_d

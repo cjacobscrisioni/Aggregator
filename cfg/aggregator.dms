@@ -5,8 +5,8 @@ container aggregator {
 		parameter<string> variable_set:= '%projdir%/variables_list.csv';
 		
 		// boundary set needs to be a single vector file, in LambertEA projection.
-		parameter<string> boundary_set:= '%projdir%/data/boundaries/fras_fuas__x1.shp';
-		parameter<string> boundary_code:= 'code';
+		parameter<string> boundary_set:= '%projdir%/data/boundaries/FunctionalAreas_PolygonLayer_S05.shp';
+		parameter<string> boundary_code:= 'INPUT_CODE';
 		
 		// population grid used as optional weight, in LambertEA projection, 1000m.
 		parameter<string> weight_set:= '%projdir%/data/population/pop_2021_1km_ARDECO.tif';
