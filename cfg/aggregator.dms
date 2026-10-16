@@ -5,8 +5,28 @@ container aggregator {
 		parameter<string> variable_set:= '%projdir%/variables_list.csv';
 		
 		// boundary set needs to be a single vector file, in LambertEA projection.
-		parameter<string> boundary_set:= '%projdir%/data/boundaries/FunctionalAreas_PolygonLayer_S05.shp';
-		parameter<string> boundary_code:= 'INPUT_CODE';
+		
+		// FRA units used in the demographics project with Michelle and Alison (prepared by Mert)
+		//parameter<string> boundary_set:= '%projdir%/data/boundaries/FunctionalAreas_PolygonLayer_S05.shp';
+		//parameter<string> boundary_code:= 'INPUT_CODE';
+		
+		// _x2 FRA units 
+		//parameter<string> boundary_set:= '%projdir%/data/boundaries/fras_fuas__x2.shp';
+		//parameter<string> boundary_code:= 'Code';
+		
+		// NUTS2 units
+		//parameter<string> boundary_set:= '%projdir%/data/boundaries/NUTS2_2024_EU.gpkg';
+		//parameter<string> boundary_code:= 'nuts_id';
+		
+		// City report FUAs
+		//parameter<string> boundary_set:= '%projdir%/data/boundaries/city_report_fuas_20260527.shp';
+		//parameter<string> boundary_code:= 'fua_id';
+		
+		// City report cities
+		parameter<string> boundary_set:= '%projdir%/data/boundaries/city_report_cities_20260527.shp';
+		parameter<string> boundary_code:= 'clust2021_';
+		
+		
 		
 		// population grid used as optional weight, in LambertEA projection, 1000m.
 		parameter<string> weight_set:= '%projdir%/data/population/pop_2021_1km_ARDECO.tif';
