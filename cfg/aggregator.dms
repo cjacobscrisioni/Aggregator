@@ -106,6 +106,7 @@ container aggregator {
 	container export_set:= for_each_nedv(variables_list/label, 'aggregate_values/'+variables_list/label+'/result', boundaries, float32) {
 		attribute<string> ZoneId (boundaries):= boundaries/ZoneId;
 	}
+	parameter<bool> store_files:= True, explicitsuppliers = "Export_Data_csv/result;Export_data_gpkg/export_value_fields;";
 	container Export_data_gpkg
 	{
 		//unit<uint32> export_skeleton:= boundaries, storagename = "= filepath", storagetype = "gdalwrite.vect" {
