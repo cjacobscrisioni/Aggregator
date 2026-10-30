@@ -2,6 +2,7 @@ container mutations {
 
 	unit<dpoint> LambertEA: 	Descr = "ETRS_1989_LAEA_52N_10E" // "coords from SW to NE";
 		,	SpatialReference = "EPSG:3035"; // EPSG code for Lamber EA	
+	unit<dpoint> ETRS89 : SpatialReference = "EPSG:4258";
 	parameter<string> tg_set:= '%projdir%/data/population/pop_2021_1km_ARDECO.tif';
 	
 	unit<wpoint> tg: storagename = "= tg_set", storagereadonly = "true", storagetype = "gdal.grid", dialogdata = "LambertEA" {
@@ -154,6 +155,31 @@ container mutations {
 		parameter<float64> dw_lau  := sum(float64(LAU2021_patched/dw_2021));                     // should be nearly equal
 		
 		unit<uint32> LAUs_without_grid:= select_with_attr_by_cond(LAU2021_patched, pcount(LAU21_patched_rel) = 0);
+	}
+	
+	container degurba_zones
+{
+	// 1. class per LAU, joined to the patched LAU polygons on GISCO_ID
+	//    (DEGURBA = the table from DGURBA_RG_01M_2021_4258; adjust field names)
+		unit<uint32> LAUs_degurba: storagename = "%projdir%/data_mutations/DGURBA_RG_01M_2021_4258.shp", storagetype = "gdal.vect", dialogdata = "ETRS89" {
+			attribute<LambertEA> geometry_lea (poly):= geometry[LambertEA];
+			attribute<string> cntr_x_degurba:= cntr_code + string(dgurba);
+			attribute<Zone> zone_rel := rlookup(cntr_x_degurba, Zone/Values);
+		}
+		
+		// 2. one zone per country and class (LAUs without a class stay out)
+		unit<uint32> Zone := unique(LAUs_degurba/cntr_x_degurba), storagename = "%projdir%/data_mutations/export/country_x_EUROSTAT_degurba_2021.gpkg", storagetype = "gdalwrite.vect"
+		{
+			attribute<string> cntr_code := substr(Values, 0, 2);
+			attribute<uint8>  class     := uint8(substr(Values, 2, 1));
+			attribute<LambertEA	> geometry (polygon, Zone) :=
+				geos_union_polygon(LAUs_degurba/geometry_lea, LAUs_degurba/zone_rel);
+			attribute<string> ZoneId:=  cntr_code+'_'+string(class);
+		}
+		
+
+		// 3. dissolve to one (multipart) polygon per zone
+		
 	}
 }
 
