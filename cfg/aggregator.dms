@@ -33,7 +33,9 @@ container aggregator {
 		//parameter<string> boundary_code:= 'clust2021_';
 		
 		
-		parameter<string> boundary_set:= replace_value(expand(., '%env:boundary_set%'), 'env:boundary_set', boundary_set_manually), Descr = "This parameter extracts the boundaries setting if the model is run from a batch file, if not, the boundary_set_manually paramater setting is used."; 
+		parameter<string> boundary_set:= replace_value(expand(., '%env:boundary_set%'), 'env:boundary_set', boundary_set_manually), 
+			Descr = "This parameter extracts the boundaries setting if the model is run from a batch file, if not, the boundary_set_manually paramater setting is used."
+			, IntegrityCheck = "uppercase(boundary_set) <> 'ZONEID'"; 
 		parameter<string> boundary_code:= replace_value(expand(., '%env:boundary_code%'), 'env:boundary_code', boundary_code_manually)        , Descr = "This parameter extracts the boundary codes field in the boundaries files setting if the model is run from a batch file, if not, the boundary_code_manually param is adopted.";
 
 		
