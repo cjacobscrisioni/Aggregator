@@ -1,0 +1,159 @@
+container mutations {
+
+	unit<dpoint> LambertEA: 	Descr = "ETRS_1989_LAEA_52N_10E" // "coords from SW to NE";
+		,	SpatialReference = "EPSG:3035"; // EPSG code for Lamber EA	
+	parameter<string> tg_set:= '%projdir%/data/population/pop_2021_1km_ARDECO.tif';
+	
+	unit<wpoint> tg: storagename = "= tg_set", storagereadonly = "true", storagetype = "gdal.grid", dialogdata = "LambertEA" {
+		attribute<float32> GridData;
+		attribute<road_transport_performance> rtp_rel:= poly2grid(road_transport_performance/geometry, .);
+		attribute<broadband_speeds_2023> bbs_2023_rel:= poly2grid(broadband_speeds_2023/geometry, .);
+		attribute<broadband_speeds_2024> bbs_2024_rel:= poly2grid(broadband_speeds_2024/geometry, .);
+		attribute<broadband_speeds_2025> bbs_2025_rel:= poly2grid(broadband_speeds_2025/geometry, .);
+		attribute<ESTAT_census_2021_gpkg> ESTAT_gpkg_rel:= poly2grid(ESTAT_census_2021_gpkg/geometry, .);
+		attribute<LAU2021_patched> LAU21_patched_rel:= poly2grid(LAU2021_patched/geometry, .);
+	}
+	unit<uint32> road_transport_performance: storagename = "%projdir%/data_mutations/[grid][baseline]___populationgrid__20241015.shp", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> broadband_speeds_2023: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2023_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> broadband_speeds_2024: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2024_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> broadband_speeds_2025: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2025_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> ESTAT_census_2021_gpkg: storagename = "%projdir%/data_mutations/ESTAT_Census_2021_V3.gpkg", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	
+	unit<uint32> PatchList : nrofrows = 10
+	{
+		attribute<string> GISCO_ID: [
+			// missing from the 2021 polygons
+			'DE_07132502', 'DE_16065089',
+			'IT_081025', 'IT_099030', 'IT_099031',
+			'NL_GM1979',
+			// receiving Haaren territory (use 2022 boundaries)
+			'NL_GM0757', 'NL_GM0824', 'NL_GM0855', 'NL_GM0865'
+		];
+	}
+	
+	unit<uint32> LAUs_2021: storagename = "%projdir%/data_mutations/lau 2021_highdetail_3035.gpkg", storagetype = "gdal.vect", dialogdata = "LambertEA" {
+		attribute<housing_indicators> hi_rel:= rlookup(gisco_id, housing_indicators/gisco_id);
+		attribute<uint32> dw_2021:= uint32(housing_indicators/census_2021_dw_tot[hi_rel]);
+		attribute<uint32> pop_2021:= uint32(housing_indicators/census_2021_pop[hi_rel]);
+		attribute<uint32> hh_2021:= uint32(housing_indicators/census_2021_hh[hi_rel]);
+		// Selection A: in the housing file AND not in the patch list
+		attribute<PatchList> patch_rel21:= rlookup(GISCO_ID, PatchList/GISCO_ID);
+	
+	}
+	unit<uint32> LAUs_2022: storagename = "%projdir%/data_mutations/LAU_RG_01M_2022_3035.gpkg", storagetype = "gdal.vect", dialogdata = "LambertEA" {
+		attribute<housing_indicators> hi_rel:= rlookup(gisco_id, housing_indicators/gisco_id);
+		attribute<uint32> dw_2021:= uint32(housing_indicators/census_2021_dw_tot[hi_rel]);
+		attribute<uint32> pop_2021:= uint32(housing_indicators/census_2021_pop[hi_rel]);
+		attribute<uint32> hh_2021:= uint32(housing_indicators/census_2021_hh[hi_rel]);
+		attribute<PatchList> patch_rel := rlookup(GISCO_ID, PatchList/GISCO_ID);
+		attribute<bool>      is_patch  := isdefined(patch_rel);
+	} 
+	unit<uint32> LAU2022_sel := select_with_attr_by_cond(LAUs_2022, LAUs_2022/is_patch);	
+	unit<uint32> LAU2021_sel := select_with_attr_by_cond(LAUs_2021, isdefined(LAUs_2021/hi_rel) && !isdefined(LAUs_2021/patch_rel21));
+	unit<uint32> LAU2021_patched := union_unit(LAU2021_sel, LAU2022_sel)//, storagename = "%projdir%/data_mutations/export/laus_census_2021_patched.gpkg", storagetype = "gdalwrite.vect"
+	{
+		attribute<string>        GISCO_ID := union_data(., LAU2021_sel/GISCO_ID, LAU2022_sel/GISCO_ID);
+		attribute<LambertEA>   geometry (poly) := union_data(., LAU2021_sel/geometry, LAU2022_sel/geometry);
+		attribute<housing_indicators>       housing_rel := rlookup(GISCO_ID, housing_indicators/GISCO_ID);
+		attribute<string> 	  cntr_code:= union_data(., LAU2021_sel/cntr_code, LAU2022_sel/cntr_code);
+		attribute<uint32> dw_2021_base:= uint32(housing_indicators/census_2021_dw_tot[housing_rel]);
+		attribute<uint32> dw_2021:= dw_2021_base > 0 ? dw_2021_base : 0 / 0;
+		attribute<uint32> dw_unoccupied_2021:=  dw_2021_base > 0 ? uint32(housing_indicators/census_2021_dw_not_occupied[housing_rel]) : 0 / 0; 
+		attribute<uint32> pop_2021:= uint32(housing_indicators/census_2021_pop[housing_rel]);
+		attribute<uint32> hh_2021:= dw_2021_base > 0 ? uint32(housing_indicators/census_2021_hh[housing_rel]) : 0 / 0; 
+		attribute<float32> rental_price_base:= float32(housing_indicators/rental_price[housing_rel]);
+		attribute<float32> rental_price:= rental_price_base > 0f ? rental_price_base : 0f / 0f;
+		attribute<float32> sales_price_base:= float32(housing_indicators/sales_price[housing_rel]);
+		attribute<float32> sales_price:= sales_price_base > 0f ? sales_price_base : 0f / 0f;
+		attribute<bool>   no_cells:= !(smear/n_cells > 0f);
+		attribute<tg>     cell_rel := centroid_or_mid(geometry)[tg];   // convert the point to a cell of tg
+		attribute<tg>     missing_cell_rel := no_cells ? cell_rel : point_xy(0 / 0, 0 / 0, upoint)[tg];   // convert the point to a cell of tg
+	}
+
+	// ---------- 6. Checks ----------
+	// 6a. patched polygons without a housing record (expect 0)
+	parameter<uint32> n_poly_without_housing := sum(uint32(!isdefined(LAU2021_patched/housing_rel)));
+
+	// 6b. housing records without a polygon (expect 0)
+	attribute<bool> hous_no_poly (housing_indicators) := !isdefined(rlookup(housing_indicators/GISCO_ID, LAU2021_patched/GISCO_ID));
+	parameter<uint32> n_housing_without_poly := sum(uint32(hous_no_poly));
+
+	// 6c. patch codes that already exist in selection A (expect 0, otherwise duplicates)
+	parameter<uint32> n_patch_duplicates :=
+		sum(uint32(isdefined(rlookup(LAU2022_sel/GISCO_ID, LAU2021_sel/GISCO_ID))));
+
+	
+	
+	//housing_indicators_LAU
+	//LAU_RG_01M_2021_3035
+	unit<uint32> housing_indicators: storagename = "%projdir%/data_mutations/housing_indicators_LAU.csv", storagetype = "gdal.vect", dialogdata = "LambertEA" {
+		attribute<uint32> LAUs_2021_count:= invert(LAUs_2021/hi_rel);
+		attribute<uint32> LAUs_2022_count:= invert(LAUs_2022/hi_rel);
+	}	
+	
+	
+	unit<wpoint> exp_grids:= tg {
+		attribute<float32> pop_within_120km:= float32(road_transport_performance/POP_withi1)[tg/rtp_rel], storagename = "%projdir%/inputs/regio_03_rp_pop_within_120km.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> pop_within_90km:=  float32(road_transport_performance/POP_withi2)[tg/rtp_rel], storagename = "%projdir%/inputs/regio_03_rp_pop_within_90km.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> max_avg_download_mbps_3y:= 
+			isdefined(/broadband_speeds_2023/avg_d_mbps[bbs_2023_rel]) || isdefined(/broadband_speeds_2024/avg_d_mbps[bbs_2024_rel]) || isdefined(/broadband_speeds_2025/avg_d_mbps[bbs_2025_rel]) ?
+			float32(max_elem(
+				makedefined(/broadband_speeds_2023/avg_d_mbps[bbs_2023_rel], 0d), 
+				makedefined(/broadband_speeds_2024/avg_d_mbps[bbs_2024_rel], 0d), 
+				makedefined(/broadband_speeds_2025/avg_d_mbps[bbs_2025_rel], 0d)
+			))
+			: 0f / 0f, storagename = "%projdir%/inputs/max_avg_download_mbps_3y.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> census21_nat_tot:= max_elem(float32(ESTAT_census_2021_gpkg/NAT)[ESTAT_gpkg_rel], 0f), storagename = "%projdir%/inputs/census21_nat_tot.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> census21_EU_oth_tot:= max_elem(float32(ESTAT_census_2021_gpkg/EU_OTH)[ESTAT_gpkg_rel], 0f), storagename = "%projdir%/inputs/census21_EU_oth_tot.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> census21_nEU_oth_tot:= max_elem(float32(ESTAT_census_2021_gpkg/OTH)[ESTAT_gpkg_rel], 0f), storagename = "%projdir%/inputs/census21_nEU_oth_tot.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> housing_dwellings_21:= (float32(LAU2021_patched/dw_2021)[LAU21_patched_rel] * smear/w) + makedefined(float32(LAU2021_patched/dw_2021)[smear/addition_rel], 0f)
+			, storagename = "%projdir%/inputs/housing21_smeared_dwellings.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> housing_dwellings_unoccupied_21:= (float32(LAU2021_patched/dw_unoccupied_2021)[LAU21_patched_rel] * smear/w) + makedefined(float32(LAU2021_patched/dw_unoccupied_2021)[smear/addition_rel], 0f)
+			, storagename = "%projdir%/inputs/housing21_smeared_unoccupied_dwellings.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> housing_pop21:= (float32(LAU2021_patched/pop_2021)[LAU21_patched_rel] * smear/w) + makedefined(float32(LAU2021_patched/pop_2021)[smear/addition_rel], 0f)
+			, storagename = "%projdir%/inputs/housing21_smeared_pop.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> housing_households21:= (float32(LAU2021_patched/hh_2021)[LAU21_patched_rel] * smear/w) + makedefined(float32(LAU2021_patched/hh_2021)[smear/addition_rel], 0f)
+			, storagename = "%projdir%/inputs/housing21_smeared_households.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> housing_rental_price:= isnull(smear/addition_rel) ? LAU2021_patched/rental_price[LAU21_patched_rel] : 0.5f * (LAU2021_patched/rental_price[LAU21_patched_rel] + LAU2021_patched/rental_price[smear/addition_rel])
+			, storagename = "%projdir%/inputs/housing21_rental_price.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> housing_sale_price:= isnull(smear/addition_rel) ? LAU2021_patched/sales_price[LAU21_patched_rel] : 0.5f * (LAU2021_patched/sales_price[LAU21_patched_rel] + LAU2021_patched/sales_price[smear/addition_rel])
+			, storagename = "%projdir%/inputs/housing21_sales_price.tif", storagetype = "gdalwrite.grid";
+		//attribute<float32> rental_prices
+	}
+	//unit<uint32> exp_points:= 
+	container smear: using = "tg;"
+	{
+		// population support, 0 where the grid has no data (water, nodata)
+		attribute<float32> pop_w   (tg) := makedefined(GridData, 0f);
+		attribute<LAU2021_patched> addition_rel (tg):= invert(LAU2021_patched/missing_cell_rel);
+		
+		// per-LAU totals
+		attribute<float32> pop_sum (LAU2021_patched) := sum(pop_w, LAU21_patched_rel);
+		attribute<float32> n_cells (LAU2021_patched) := sum(const(1f, tg, float32), LAU21_patched_rel);
+		attribute<bool>    use_pop (LAU2021_patched) := pop_sum > 0f;
+
+		// share of the LAU total that each cell receives (sums to 1 within every LAU with cells)
+		attribute<float32> w (tg) := iif(use_pop[LAU21_patched_rel],
+			pop_w / pop_sum[LAU21_patched_rel],      // population-weighted
+			1f / n_cells[LAU21_patched_rel]);        // fallback: even split
+
+		
+		
+		attribute<float32> dw_extra (tg) :=
+	sum(iif(no_cells, float32(LAU2021_patched/dw_2021), 0f), cell_rel);
+
+//attribute<float32> housing_dwellings_21 (tg) :=
+//	makedefined(<your smeared value>, 0f) + dw_extra;
+			
+		// repeat for households, census population and not-occupied dwellings with the same w
+
+		// checks
+		parameter<uint32>  n_lau_no_cells := sum(uint32(!(n_cells > 0f)));                       // LAUs that lose their data
+		parameter<uint32>  n_lau_fallback := sum(uint32(!use_pop && isdefined(LAU2021_patched/dw_2021)));
+		parameter<float64> dw_grid := sum(float64(housing_dwellings_21));
+		parameter<float64> dw_lau  := sum(float64(LAU2021_patched/dw_2021));                     // should be nearly equal
+		
+		unit<uint32> LAUs_without_grid:= select_with_attr_by_cond(LAU2021_patched, pcount(LAU21_patched_rel) = 0);
+	}
+}
+

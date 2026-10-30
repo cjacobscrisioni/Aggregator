@@ -2,7 +2,8 @@ container aggregator {
 	
 	container ModelParameters {
 		// variable set as defined in a csv file
-		parameter<string> variable_set:= '%projdir%/variables_list.csv';
+		parameter<string> variable_set:= '%projdir%/variables_list.csv', descr = "aggregation rules as provided in a csv file";
+		parameter<string> weight_set:= '%projdir%/data/population/pop_2021_1km_ARDECO.tif', descr = "grid used as optional weight, in LambertEA projection, 1000m.";
 		
 		// boundary set needs to be a single vector file, in LambertEA projection.
 		
@@ -14,6 +15,11 @@ container aggregator {
 		//parameter<string> boundary_set:= '%projdir%/data/boundaries/fras_fuas__x2.shp';
 		//parameter<string> boundary_code:= 'Code';
 		
+		// _x8 FRAU units 2021		
+		parameter<string> boundary_set_manually:= '%projdir%/data/boundaries/fraus__x8_pop_lau 2021_highdetail_3035.shp';
+		parameter<string> boundary_code_manually:= 'fa_code';
+		
+		
 		// NUTS2 units
 		//parameter<string> boundary_set:= '%projdir%/data/boundaries/NUTS2_2024_EU.gpkg';
 		//parameter<string> boundary_code:= 'nuts_id';
@@ -23,13 +29,18 @@ container aggregator {
 		//parameter<string> boundary_code:= 'fua_id';
 		
 		// City report cities
-		parameter<string> boundary_set:= '%projdir%/data/boundaries/city_report_cities_20260527.shp';
-		parameter<string> boundary_code:= 'clust2021_';
+		//parameter<string> boundary_set:= '%projdir%/data/boundaries/city_report_cities_20260527.shp';
+		//parameter<string> boundary_code:= 'clust2021_';
 		
 		
+		parameter<string> boundary_set:= replace_value(expand(., '%env:boundary_set%'), 'env:boundary_set', boundary_set_manually), Descr = "This parameter extracts the boundaries setting if the model is run from a batch file, if not, the boundary_set_manually paramater setting is used."; 
+		parameter<string> boundary_code:= replace_value(expand(., '%env:boundary_code%'), 'env:boundary_code', boundary_code_manually)        , Descr = "This parameter extracts the boundary codes field in the boundaries files setting if the model is run from a batch file, if not, the boundary_code_manually param is adopted.";
+
 		
-		// population grid used as optional weight, in LambertEA projection, 1000m.
-		parameter<string> weight_set:= '%projdir%/data/population/pop_2021_1km_ARDECO.tif';
+		// automatically establish name of the boundary, as stored in the output csv file.
+		parameter<uint32> last_slash:= strrpos(boundary_set, '/');
+		parameter<uint32> last_point:= strrpos(boundary_set, '.');
+		parameter<string> boundary_name:= substr(boundary_set, last_slash + 1, last_point - (last_slash + 1));
 	}
 	
 	unit<dpoint> LambertEA: 	Descr = "ETRS_1989_LAEA_52N_10E" // "coords from SW to NE";
@@ -95,14 +106,32 @@ container aggregator {
 	container export_set:= for_each_nedv(variables_list/label, 'aggregate_values/'+variables_list/label+'/result', boundaries, float32) {
 		attribute<string> ZoneId (boundaries):= boundaries/ZoneId;
 	}
-	
-	container Export_Data 
+	container Export_data_gpkg
+	{
+		//unit<uint32> export_skeleton:= boundaries, storagename = "= filepath", storagetype = "gdalwrite.vect" {
+		
+		//}
+		//container export_value_fields:= for_each_nedvat(variables_list/label
+		container export_value_fields:= for_each_nedv(variables_list/label
+			, 'export_set/'+variables_list/label
+			, boundaries
+			, float32
+			//, filepath
+			//, 'gdalwrite.vect'
+		),  storagename = "= filepath", storagetype = "gdalwrite.vect" 
+		{
+			attribute<LambertEA> geometry (boundaries, poly):= boundaries/Geometry;//, storagename = "= filepath", storagetype = "gdalwrite.vect";
+			attribute<string> ZoneId (boundaries):= boundaries/ZoneId;//, storagename = "= filepath", storagetype = "gdalwrite.vect";
+		}
+		parameter<string> filepath:= '%Projdir%/Store/variables_'+ModelParameters/boundary_name+'_.gpkg';
+	}
+	container Export_Data_csv 
 	{
 	
 		// assume ExportDomain is a configured domain unit with two attributes as subitems: id & dist
 		parameter<string> fieldseparator := ';';
 		parameter<string> fieldnamelist:= 'ZoneId'+fieldseparator+aslist(variables_list/label, fieldseparator);
-		parameter<string> filename       := '%Projdir%/Store/Variables.csv';
+		parameter<string> filename       := '%Projdir%/Store/variables_'+ModelParameters/boundary_name+'_.csv';
 
 		unit<uint32> field := range(uint32, 0,strcount(fieldnamelist, fieldseparator) +1)
 		{
@@ -134,17 +163,18 @@ container aggregator {
 		
 		attribute<float32> in_values (unit_def):= float32(file_container/inFile/ReadData);
 		attribute<float32> values (unit_def):= =strlen(variables_list/add_expr[in_var]) > 0 ? '('+variables_list/add_expr[in_var]+')[float32]' : 'in_values';
+		attribute<float32> adjusted_w (unit_def):= isdefined(values) ? w/ReadData : 0f;
 	
 		attribute<float32> count (boundaries):= pcount(unit_def/bd_rel)[float32];
 		attribute<float32> min (boundaries):= min(values, unit_def/bd_rel);
 		attribute<float32> max (boundaries):= max(values, unit_def/bd_rel);
 		attribute<float32> sum (boundaries):= sum(values, unit_def/bd_rel);
-		attribute<float32> w_sum (boundaries):= sum(values * w/ReadData, unit_def/bd_rel);
-		attribute<float32> sum_w (boundaries):= sum(w/ReadData, unit_def/bd_rel);
+		attribute<float32> w_sum (boundaries):= sum(values * adjusted_w, unit_def/bd_rel);
+		attribute<float32> sum_w (boundaries):= sum(adjusted_w, unit_def/bd_rel);
 		attribute<float32> arith_mean (boundaries):= mean(values, unit_def/bd_rel);
 		attribute<float32> harm_mean (boundaries):= pcount(unit_def/bd_rel)[float32] / sum(1f / values, unit_def/bd_rel);
-		attribute<float32> w_arith_mean (boundaries):= sum(w/ReadData * values, unit_def/bd_rel) / sum_w;
-		attribute<float32> w_harm_mean (boundaries):= sum_w / sum(w/ReadData / values, unit_def/bd_rel);
+		attribute<float32> w_arith_mean (boundaries):= sum(adjusted_w * values, unit_def/bd_rel) / sum_w;
+		attribute<float32> w_harm_mean (boundaries):= sum_w / sum(adjusted_w / values, unit_def/bd_rel);
 		
 		attribute<float32> result (boundaries):= switch(
 			  case(operation='sum' && !weighting, sum)
