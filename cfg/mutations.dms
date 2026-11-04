@@ -8,6 +8,10 @@ container mutations {
 	unit<wpoint> tg: storagename = "= tg_set", storagereadonly = "true", storagetype = "gdal.grid", dialogdata = "LambertEA" {
 		attribute<float32> GridData;
 		attribute<road_transport_performance> rtp_rel:= poly2grid(road_transport_performance/geometry, .);
+		attribute<broadband_speeds_2019> bbs_2019_rel:= poly2grid(broadband_speeds_2019/geometry, .);
+		attribute<broadband_speeds_2020> bbs_2020_rel:= poly2grid(broadband_speeds_2020/geometry, .);
+		attribute<broadband_speeds_2021> bbs_2021_rel:= poly2grid(broadband_speeds_2021/geometry, .);
+		attribute<broadband_speeds_2022> bbs_2022_rel:= poly2grid(broadband_speeds_2022/geometry, .);
 		attribute<broadband_speeds_2023> bbs_2023_rel:= poly2grid(broadband_speeds_2023/geometry, .);
 		attribute<broadband_speeds_2024> bbs_2024_rel:= poly2grid(broadband_speeds_2024/geometry, .);
 		attribute<broadband_speeds_2025> bbs_2025_rel:= poly2grid(broadband_speeds_2025/geometry, .);
@@ -15,6 +19,10 @@ container mutations {
 		attribute<LAU2021_patched> LAU21_patched_rel:= poly2grid(LAU2021_patched/geometry, .);
 	}
 	unit<uint32> road_transport_performance: storagename = "%projdir%/data_mutations/[grid][baseline]___populationgrid__20241015.shp", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> broadband_speeds_2019: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2019_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> broadband_speeds_2020: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2020_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> broadband_speeds_2021: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2021_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> broadband_speeds_2022: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2022_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
 	unit<uint32> broadband_speeds_2023: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2023_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
 	unit<uint32> broadband_speeds_2024: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2024_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
 	unit<uint32> broadband_speeds_2025: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2025_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
@@ -96,6 +104,14 @@ container mutations {
 	unit<wpoint> exp_grids:= tg {
 		attribute<float32> pop_within_120km:= float32(road_transport_performance/POP_withi1)[tg/rtp_rel], storagename = "%projdir%/inputs/regio_03_rp_pop_within_120km.tif", storagetype = "gdalwrite.grid";
 		attribute<float32> pop_within_90km:=  float32(road_transport_performance/POP_withi2)[tg/rtp_rel], storagename = "%projdir%/inputs/regio_03_rp_pop_within_90km.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> download_mbps_2019:= float32(broadband_speeds_2019/avg_d_mbps[bbs_2019_rel]),  storagename = "%projdir%/inputs/avg_download_mbps_2019.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> download_mbps_2020:= float32(broadband_speeds_2020/avg_d_mbps[bbs_2020_rel]),  storagename = "%projdir%/inputs/avg_download_mbps_2020.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> download_mbps_2021:= float32(broadband_speeds_2021/avg_d_mbps[bbs_2021_rel]),  storagename = "%projdir%/inputs/avg_download_mbps_2021.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> download_mbps_2022:= float32(broadband_speeds_2022/avg_d_mbps[bbs_2022_rel]),  storagename = "%projdir%/inputs/avg_download_mbps_2022.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> download_mbps_2023:= float32(broadband_speeds_2023/avg_d_mbps[bbs_2023_rel]),  storagename = "%projdir%/inputs/avg_download_mbps_2023.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> download_mbps_2024:= float32(broadband_speeds_2024/avg_d_mbps[bbs_2024_rel]),  storagename = "%projdir%/inputs/avg_download_mbps_2024.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> download_mbps_2025:= float32(broadband_speeds_2025/avg_d_mbps[bbs_2025_rel]),  storagename = "%projdir%/inputs/avg_download_mbps_2025.tif", storagetype = "gdalwrite.grid";
+		
 		attribute<float32> max_avg_download_mbps_3y:= 
 			isdefined(/broadband_speeds_2023/avg_d_mbps[bbs_2023_rel]) || isdefined(/broadband_speeds_2024/avg_d_mbps[bbs_2024_rel]) || isdefined(/broadband_speeds_2025/avg_d_mbps[bbs_2025_rel]) ?
 			float32(max_elem(

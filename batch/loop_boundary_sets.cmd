@@ -26,12 +26,11 @@ REM Boundary sets, written as "full path|zone field".
 REM Remove or comment out (with rem) the sets that you do not need.
 set sets=^
  "%bnd%\EUROSTAT_CITY-LAU-2021.gpkg|Code"^
- "%bnd%\country_x_EUROSTAT_degurba_2021.gpkg|Code"
- 
-REM "%bnd%\NUTS_RG_01M_2024_3035_LEVL_1.gpkg|nuts_id"^
-REM "%bnd%\NUTS_RG_01M_2024_3035_LEVL_2.gpkg|nuts_id"^
-REM "%bnd%\NUTS_RG_01M_2024_3035_LEVL_3.gpkg|nuts_id"^
-REM "%bnd%\fraus__x8_pop_lau 2021_highdetail_3035.shp|fa_code"
+ "%bnd%\country_x_EUROSTAT_degurba_2021.gpkg|Code"^
+ "%bnd%\NUTS_RG_01M_2024_3035_LEVL_1.gpkg|nuts_id"^
+ "%bnd%\NUTS_RG_01M_2024_3035_LEVL_2.gpkg|nuts_id"^
+ "%bnd%\NUTS_RG_01M_2024_3035_LEVL_3.gpkg|nuts_id"^
+ "%bnd%\fraus__x8_pop_lau 2021_highdetail_3035.shp|fa_code"
 
 echo Boundary sets to process:
 for %%p in (%sets%) do echo   %%~p
