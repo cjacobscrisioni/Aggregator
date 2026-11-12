@@ -20,7 +20,7 @@ retail_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_retail_2021_etrs89_int_tt
 ACCESS_SEC_SCHOOL;D:\projdir\Aggregator_fras\inputs\espon_secondary_schools_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
 ACCESS_TRAIN_STA;D:\projdir\Aggregator_fras\inputs\RAIL_STOPS_2019_PT_int_tt.tif;grid;mean;1;In_Values < 15d
 eter_univ_2016_avg_tt;D:\projdir\Aggregator_fras\inputs\universities_ETER_2016_MULTI_PT_ETRS89_int_tt.tif;grid;mean;1;
-ACCESS_UNIVERSITY;D:\projdir\Aggregator_fras\inputs\universities_ETER_2016_MULTI_PT_ETRS89_int_tt.tif;grid;mean;1;In_Values < 15d
+ACCESS_UNIVERSITY;D:\projdir\Aggregator_fras\inputs\universities_ETER_2016_MULTI_PT_ETRS89_int_tt.tif;grid;mean;1;In_Values < 30d
 POT_ACCESS;D:\projdir\Aggregator_fras\inputs\rel_ai.tif;grid;mean;1;
 REG_CENTER_MAX;D:\projdir\Aggregator_fras\inputs\Settlements_v5.shp;point;max;0;maxl_d[float64]
 NUM_HOSPITAL;D:\sourcedata\Network_methods\data\_remoteness\Espon_Hospitals_2021_etrs89.shp;point;count;0;
