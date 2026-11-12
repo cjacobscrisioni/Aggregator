@@ -11,18 +11,18 @@ primry_schools_espon_avg_tt;D:\projdir\Aggregator_fras\inputs\espon_primary_scho
 retail_avg_tt;D:\projdir\Aggregator_fras\inputs\espon_retail_2021_etrs89_int_tt.tif;grid; mean;1;
 secdry_schools_espon_avg_tt;D:\projdir\Aggregator_fras\inputs\espon_secondary_schools_2021_etrs89_int_tt.tif;grid; mean;1;
 rail_stops_avg_tt;D:\projdir\Aggregator_fras\inputs\RAIL_STOPS_2019_PT_int_tt.tif;grid;mean;1;
-banks_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_banks_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
-cinemas_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_cinemas_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
-ACCESS_HOSPITAL;D:\projdir\Aggregator_fras\inputs\espon_hospitals_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
-pharmacies_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_pharmacies_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
-ACCESS_PRIM_SCHOOL;D:\projdir\Aggregator_fras\inputs\espon_primary_schools_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
-retail_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_retail_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
-ACCESS_SEC_SCHOOL;D:\projdir\Aggregator_fras\inputs\espon_secondary_schools_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15f
-ACCESS_TRAIN_STA;D:\projdir\Aggregator_fras\inputs\RAIL_STOPS_2019_PT_int_tt.tif;grid;mean;1;In_Values < 15f
+banks_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_banks_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
+cinemas_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_cinemas_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
+ACCESS_HOSPITAL;D:\projdir\Aggregator_fras\inputs\espon_hospitals_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
+pharmacies_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_pharmacies_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
+ACCESS_PRIM_SCHOOL;D:\projdir\Aggregator_fras\inputs\espon_primary_schools_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
+retail_pop_15m;D:\projdir\Aggregator_fras\inputs\espon_retail_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
+ACCESS_SEC_SCHOOL;D:\projdir\Aggregator_fras\inputs\espon_secondary_schools_2021_etrs89_int_tt.tif;grid; mean;1;In_Values < 15d
+ACCESS_TRAIN_STA;D:\projdir\Aggregator_fras\inputs\RAIL_STOPS_2019_PT_int_tt.tif;grid;mean;1;In_Values < 15d
 eter_univ_2016_avg_tt;D:\projdir\Aggregator_fras\inputs\universities_ETER_2016_MULTI_PT_ETRS89_int_tt.tif;grid;mean;1;
-ACCESS_UNIVERSITY;D:\projdir\Aggregator_fras\inputs\universities_ETER_2016_MULTI_PT_ETRS89_int_tt.tif;grid;mean;1;In_Values < 30f
+ACCESS_UNIVERSITY;D:\projdir\Aggregator_fras\inputs\universities_ETER_2016_MULTI_PT_ETRS89_int_tt.tif;grid;mean;1;In_Values < 15d
 POT_ACCESS;D:\projdir\Aggregator_fras\inputs\rel_ai.tif;grid;mean;1;
-REG_CENTER_MAX;D:\projdir\Aggregator_fras\inputs\Settlements_v5.shp;point;max;0;maxl_d
+REG_CENTER_MAX;D:\projdir\Aggregator_fras\inputs\Settlements_v5.shp;point;max;0;maxl_d[float64]
 NUM_HOSPITAL;D:\sourcedata\Network_methods\data\_remoteness\Espon_Hospitals_2021_etrs89.shp;point;count;0;
 NUM_PSCHOOL;D:\sourcedata\Network_methods\data\_remoteness\Espon_Primary_Schools_2021_etrs89.shp;point;count;0;
 NUM_SSCHOOL;D:\sourcedata\Network_methods\data\_remoteness\Espon_Secondary_Schools_2021_etrs89.shp;point;count;0;
@@ -35,6 +35,7 @@ NUM_TRAIN_STATIONS;D:\sourcedata\Network_methods\data\_remoteness\RAIL_STOPS_201
 NUM_BEACH;D:\sourcedata\Network_methods\data\_remoteness\JRC_beaches.shp;point;count;0;
 REMOTE_POP;D:\projdir\Aggregator_fras\inputs\remoteness_urban_gridpoints.tif;grid;mean;1;
 five_restaurants_tt;D:\projdir\Aggregator_fras\inputs\time_5_TripAdvisor_2023_restaurants.tif;grid;mean;1;
+five_restaurants_15mins;D:\projdir\Aggregator_fras\inputs\time_5_TripAdvisor_2023_restaurants.tif;grid;mean;1;In_Values < 15d
 NUM_CHILDCARE;D:\sourcedata\NetworkModel_EU\POIs\ESPON_DESIRE_POI_Childcare.shp;point;count;0;
 NUM_ELDERLYCARE;D:\sourcedata\NetworkModel_EU\POIs\ESPON_DESIRE_POI_Elderlycare.shp;point;count;0;
 NUM_REST;D:\sourcedata\NetworkModel_EU\POIs\TripAdvisor_2023_restaurants.shp;point;count;0;
@@ -96,3 +97,5 @@ avg_download_fixed_2023;D:\projdir\Aggregator_FRAs\inputs\avg_download_fixed_mbp
 avg_download_fixed_2024;D:\projdir\Aggregator_FRAs\inputs\avg_download_fixed_mbps_2024.tif;grid;mean;1;
 avg_download_fixed_2025;D:\projdir\Aggregator_FRAs\inputs\avg_download_fixed_mbps_2025.tif;grid;mean;1;
 min_degurba;D:\projdir\Aggregator_FRAs\inputs\DGUR_LEVEL2_GRD_1KM_2021.tif;grid;min;0;
+estat_access_education_2026;D:\projdir\Aggregator_FRAs\inputs\euro_access_education_2026_CAR_S_1000m_v2026_10.tif;grid;mean;1;max_elem(in_values, 0d)
+estat_access_healthcare_2026;D:\projdir\Aggregator_FRAs\inputs\euro_access_healthcare_2026_CAR_S_1000m_v2026_10.tif;grid;mean;1;max_elem(in_values, 0d)

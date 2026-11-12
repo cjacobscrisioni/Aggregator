@@ -105,7 +105,7 @@ container aggregator {
 		, 'T_aggregate_values_'+trim(variables_list/agg_template)+'('+string(id(variables_list))+')'
 		), IntegrityCheck = "all_single_variable_names";
 	
-	container export_set:= for_each_nedv(variables_list/label, 'aggregate_values/'+variables_list/label+'/result', boundaries, float32) {
+	container export_set:= for_each_nedv(variables_list/label, 'aggregate_values/'+variables_list/label+'/result', boundaries, float64) {
 		attribute<string> ZoneId (boundaries):= boundaries/ZoneId;
 	}
 	parameter<bool> store_files:= True, explicitsuppliers = "Export_Data_csv/result;Export_data_gpkg/export_value_fields;";
@@ -118,7 +118,7 @@ container aggregator {
 		container export_value_fields:= for_each_nedv(variables_list/label
 			, 'export_set/'+variables_list/label
 			, boundaries
-			, float32
+			, float64
 			//, filepath
 			//, 'gdalwrite.vect'
 		),  storagename = "= filepath", storagetype = "gdalwrite.vect" 
@@ -164,22 +164,22 @@ container aggregator {
 		parameter<string> operation:= lowercase(trim(variables_list/aggregation_method[in_var]));
 		parameter<bool> weighting:= bool(trim(variables_list/weight[in_var]));
 		
-		attribute<float32> in_values (unit_def):= float32(file_container/inFile/ReadData);
-		attribute<float32> values (unit_def):= =strlen(variables_list/add_expr[in_var]) > 0 ? '('+variables_list/add_expr[in_var]+')[float32]' : 'in_values';
-		attribute<float32> adjusted_w (unit_def):= isdefined(values) ? w/ReadData : 0f;
+		attribute<float64> in_values (unit_def):= float64(file_container/inFile/ReadData);
+		attribute<float64> values (unit_def):= =strlen(variables_list/add_expr[in_var]) > 0 ? '('+variables_list/add_expr[in_var]+')[float64]' : 'in_values';
+		attribute<float64> adjusted_w (unit_def):= isdefined(values) ? w/ReadData[float64] : 0d;
 	
-		attribute<float32> count (boundaries):= pcount(unit_def/bd_rel)[float32];
-		attribute<float32> min (boundaries):= min(values, unit_def/bd_rel);
-		attribute<float32> max (boundaries):= max(values, unit_def/bd_rel);
-		attribute<float32> sum (boundaries):= sum(values, unit_def/bd_rel);
-		attribute<float32> w_sum (boundaries):= sum(values * adjusted_w, unit_def/bd_rel);
-		attribute<float32> sum_w (boundaries):= sum(adjusted_w, unit_def/bd_rel);
-		attribute<float32> arith_mean (boundaries):= mean(values, unit_def/bd_rel);
-		attribute<float32> harm_mean (boundaries):= pcount(unit_def/bd_rel)[float32] / sum(1f / values, unit_def/bd_rel);
-		attribute<float32> w_arith_mean (boundaries):= sum(adjusted_w * values, unit_def/bd_rel) / sum_w;
-		attribute<float32> w_harm_mean (boundaries):= sum_w / sum(adjusted_w / values, unit_def/bd_rel);
+		attribute<float64> count (boundaries):= pcount(unit_def/bd_rel)[float64];
+		attribute<float64> min (boundaries):= min(values, unit_def/bd_rel);
+		attribute<float64> max (boundaries):= max(values, unit_def/bd_rel);
+		attribute<float64> sum (boundaries):= sum(values, unit_def/bd_rel);
+		attribute<float64> w_sum (boundaries):= sum(values * adjusted_w, unit_def/bd_rel);
+		attribute<float64> sum_w (boundaries):= sum(adjusted_w, unit_def/bd_rel);
+		attribute<float64> arith_mean (boundaries):= mean(values, unit_def/bd_rel);
+		attribute<float64> harm_mean (boundaries):= pcount(unit_def/bd_rel)[float64] / sum(1d / values, unit_def/bd_rel);
+		attribute<float64> w_arith_mean (boundaries):= sum(adjusted_w * values, unit_def/bd_rel) / sum_w;
+		attribute<float64> w_harm_mean (boundaries):= sum_w / sum(adjusted_w / values, unit_def/bd_rel);
 		
-		attribute<float32> result (boundaries):= switch(
+		attribute<float64> result (boundaries):= switch(
 			  case(operation='sum' && !weighting, sum)
 			, case(operation='sum' && weighting, w_sum)
 			, case(operation='min', min)
@@ -202,20 +202,20 @@ container aggregator {
 		parameter<string> operation:= lowercase(trim(variables_list/aggregation_method[in_var]));
 		parameter<bool> weighting:= bool(trim(variables_list/weight[in_var]));
 		
-		attribute<float32> values (unit_def):= =strlen(variables_list/add_expr[in_var]) > 0 ? '(unit_def/'+variables_list/add_expr[in_var]+')[float32]' : 'const(1f, unit_def, float32)';
+		attribute<float64> values (unit_def):= =strlen(variables_list/add_expr[in_var]) > 0 ? '(unit_def/'+variables_list/add_expr[in_var]+')[float64]' : 'const(1f, unit_def, float64)';
 		
-		attribute<float32> count (boundaries):= pcount(unit_def/bd_rel)[float32];
-		attribute<float32> min (boundaries):= min(values, unit_def/bd_rel)[float32];
-		attribute<float32> max (boundaries):= max(values, unit_def/bd_rel)[float32];
-		attribute<float32> sum (boundaries):= sum(values, unit_def/bd_rel)[float32];
-		attribute<float32> w_sum (boundaries):= sum(values * unit_def/weight, unit_def/bd_rel);
-		attribute<float32> sum_w (boundaries):= sum(unit_def/weight, unit_def/bd_rel);
-		attribute<float32> arith_mean (boundaries):= mean(values, unit_def/bd_rel);
-		attribute<float32> harm_mean (boundaries):= pcount(unit_def/bd_rel)[float32] / sum(1f / values, unit_def/bd_rel);
-		attribute<float32> w_arith_mean (boundaries):= sum(unit_def/weight * values, unit_def/bd_rel) / sum_w;
-		attribute<float32> w_harm_mean (boundaries):= sum_w / sum(unit_def/weight / values, unit_def/bd_rel);
+		attribute<float64> count (boundaries):= pcount(unit_def/bd_rel)[float64];
+		attribute<float64> min (boundaries):= min(values, unit_def/bd_rel)[float64];
+		attribute<float64> max (boundaries):= max(values, unit_def/bd_rel)[float64];
+		attribute<float64> sum (boundaries):= sum(values, unit_def/bd_rel)[float64];
+		attribute<float64> w_sum (boundaries):= sum(values * unit_def/weight, unit_def/bd_rel);
+		attribute<float64> sum_w (boundaries):= sum(unit_def/weight, unit_def/bd_rel);
+		attribute<float64> arith_mean (boundaries):= mean(values, unit_def/bd_rel);
+		attribute<float64> harm_mean (boundaries):= pcount(unit_def/bd_rel)[float64] / sum(1d / values, unit_def/bd_rel);
+		attribute<float64> w_arith_mean (boundaries):= sum(unit_def/weight * values, unit_def/bd_rel) / sum_w;
+		attribute<float64> w_harm_mean (boundaries):= sum_w / sum(unit_def/weight / values, unit_def/bd_rel);
 		
-		attribute<float32> result (boundaries):= switch(
+		attribute<float64> result (boundaries):= switch(
 			  case(operation='sum' && !weighting, sum)
 			, case(operation='sum' && weighting, w_sum)
 			, case(operation='min', min)
@@ -248,7 +248,7 @@ container aggregator {
 		unit<uint32> inFile: storagename = "= trim(inpath)", storagereadonly = "true", storagetype = "gdal.vect", dialogdata = "LambertEA" 
 		{
 			attribute<tg> gridrel:= geometry[tg];
-			attribute<float32> 	weight:= w/ReadData[gridrel];
+			attribute<float64> 	weight:= float64(w/ReadData)[gridrel];
 			attribute<boundaries> bd_rel:= point_in_polygon(geometry, boundaries/Geometry), IntegrityCheck = "all_single_zoneid";
 		}
 		
