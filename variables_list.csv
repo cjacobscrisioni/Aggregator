@@ -106,10 +106,10 @@ avg_download_mobile_2022;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_m
 avg_download_mobile_2023;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2023.tif;grid;mean;1;
 avg_download_mobile_2024;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2024.tif;grid;mean;1;
 avg_download_mobile_2025;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2025.tif;grid;mean;1;
-eea_avg_pm10_p904_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2020.tif;grid;mean;1;
-eea_avg_pm10_p904_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2021.tif;grid;mean;1;
-eea_avg_pm10_p904_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2022.tif;grid;mean;1;
-eea_avg_pm10_p904_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2023.tif;grid;mean;1;
+eea_p904_pm10_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2020.tif;grid;mean;1;
+eea_p904_pm10_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2021.tif;grid;mean;1;
+eea_p904_pm10_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2022.tif;grid;mean;1;
+eea_p904_pm10_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2023.tif;grid;mean;1;
 eea_avg_pm25_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm25_2020.tif;grid;mean;1;
 eea_avg_pm25_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm25_2021.tif;grid;mean;1;
 eea_avg_pm25_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm25_2022.tif;grid;mean;1;
@@ -118,7 +118,7 @@ eea_avg_no2_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2020.tif;grid;mea
 eea_avg_no2_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2021.tif;grid;mean;1;
 eea_avg_no2_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2022.tif;grid;mean;1;
 eea_avg_no2_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2023.tif;grid;mean;1;
-eea_avg_o3_p932_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2020.tif;grid;mean;1;
-eea_avg_o3_p932_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2021.tif;grid;mean;1;
-eea_avg_o3_p932_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2022.tif;grid;mean;1;
-eea_avg_o3_p932_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2023.tif;grid;mean;1;
+eea_p932_o3_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2020.tif;grid;mean;1;
+eea_p932_o3_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2021.tif;grid;mean;1;
+eea_p932_o3_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2022.tif;grid;mean;1;
+eea_p932_o3_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2023.tif;grid;mean;1;
