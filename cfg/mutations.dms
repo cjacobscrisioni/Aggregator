@@ -8,27 +8,66 @@ container mutations {
 	unit<wpoint> tg: storagename = "= tg_set", storagereadonly = "true", storagetype = "gdal.grid", dialogdata = "LambertEA" {
 		attribute<float32> GridData;
 		attribute<road_transport_performance> rtp_rel:= poly2grid(road_transport_performance/geometry, .);
-		attribute<broadband_speeds_2019> bbs_2019_rel:= poly2grid(broadband_speeds_2019/geometry, .);
-		attribute<broadband_speeds_2020> bbs_2020_rel:= poly2grid(broadband_speeds_2020/geometry, .);
-		attribute<broadband_speeds_2021> bbs_2021_rel:= poly2grid(broadband_speeds_2021/geometry, .);
-		attribute<broadband_speeds_2022> bbs_2022_rel:= poly2grid(broadband_speeds_2022/geometry, .);
-		attribute<broadband_speeds_2023> bbs_2023_rel:= poly2grid(broadband_speeds_2023/geometry, .);
-		attribute<broadband_speeds_2024> bbs_2024_rel:= poly2grid(broadband_speeds_2024/geometry, .);
-		attribute<broadband_speeds_2025> bbs_2025_rel:= poly2grid(broadband_speeds_2025/geometry, .);
+		attribute<fixed_broadband_speeds_2019> fbbs_2019_rel:= poly2grid(fixed_broadband_speeds_2019/geometry, .);
+		attribute<fixed_broadband_speeds_2020> fbbs_2020_rel:= poly2grid(fixed_broadband_speeds_2020/geometry, .);
+		attribute<fixed_broadband_speeds_2021> fbbs_2021_rel:= poly2grid(fixed_broadband_speeds_2021/geometry, .);
+		attribute<fixed_broadband_speeds_2022> fbbs_2022_rel:= poly2grid(fixed_broadband_speeds_2022/geometry, .);
+		attribute<fixed_broadband_speeds_2023> fbbs_2023_rel:= poly2grid(fixed_broadband_speeds_2023/geometry, .);
+		attribute<fixed_broadband_speeds_2024> fbbs_2024_rel:= poly2grid(fixed_broadband_speeds_2024/geometry, .);
+		attribute<fixed_broadband_speeds_2025> fbbs_2025_rel:= poly2grid(fixed_broadband_speeds_2025/geometry, .);
+		
+		attribute<mobile_broadband_speeds_2019> mbbs_2019_rel:= poly2grid(mobile_broadband_speeds_2019/geometry, .);
+		attribute<mobile_broadband_speeds_2020> mbbs_2020_rel:= poly2grid(mobile_broadband_speeds_2020/geometry, .);
+		attribute<mobile_broadband_speeds_2021> mbbs_2021_rel:= poly2grid(mobile_broadband_speeds_2021/geometry, .);
+		attribute<mobile_broadband_speeds_2022> mbbs_2022_rel:= poly2grid(mobile_broadband_speeds_2022/geometry, .);
+		attribute<mobile_broadband_speeds_2023> mbbs_2023_rel:= poly2grid(mobile_broadband_speeds_2023/geometry, .);
+		attribute<mobile_broadband_speeds_2024> mbbs_2024_rel:= poly2grid(mobile_broadband_speeds_2024/geometry, .);
+		attribute<mobile_broadband_speeds_2025> mbbs_2025_rel:= poly2grid(mobile_broadband_speeds_2025/geometry, .);
+		
 		attribute<ESTAT_census_2021_gpkg> ESTAT_gpkg_rel:= poly2grid(ESTAT_census_2021_gpkg/geometry, .);
 		attribute<LAU2021_patched> LAU21_patched_rel:= poly2grid(LAU2021_patched/geometry, .);
+		attribute<gisco_grids> gisco_rel:= poly2grid(gisco_grids/geometry, .);
 	}
 	unit<uint32> road_transport_performance: storagename = "%projdir%/data_mutations/[grid][baseline]___populationgrid__20241015.shp", storagetype = "gdal.vect", dialogdata = "LambertEA" {
 		attribute<float32> rp:= POP_withi1[float32] / POP_withi2[float32];
 	}
-	unit<uint32> broadband_speeds_2019: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2019_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
-	unit<uint32> broadband_speeds_2020: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2020_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
-	unit<uint32> broadband_speeds_2021: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2021_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
-	unit<uint32> broadband_speeds_2022: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2022_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
-	unit<uint32> broadband_speeds_2023: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2023_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
-	unit<uint32> broadband_speeds_2024: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2024_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
-	unit<uint32> broadband_speeds_2025: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2025_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
-	unit<uint32> ESTAT_census_2021_gpkg: storagename = "%projdir%/data_mutations/ESTAT_Census_2021_V3.gpkg", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> fixed_broadband_speeds_2019: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2019_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> fixed_broadband_speeds_2020: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2020_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> fixed_broadband_speeds_2021: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2021_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> fixed_broadband_speeds_2022: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2022_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> fixed_broadband_speeds_2023: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2023_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> fixed_broadband_speeds_2024: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2024_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> fixed_broadband_speeds_2025: storagename = "%projdir%/data_mutations/performance_fixed_tiles_2025_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	
+	unit<uint32> mobile_broadband_speeds_2019: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2019_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> mobile_broadband_speeds_2020: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2020_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> mobile_broadband_speeds_2021: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2021_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> mobile_broadband_speeds_2022: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2022_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> mobile_broadband_speeds_2023: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2023_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> mobile_broadband_speeds_2024: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2024_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	unit<uint32> mobile_broadband_speeds_2025: storagename = "%projdir%/data_mutations/performance_mobile_tiles_2025_avg_laea.parquet", storagetype = "gdal.vect", dialogdata = "LambertEA";
+	
+	
+	unit<uint32> eea_years:= range(uint32, 0, 4) {attribute<string> year:= string(id(.)+2020); attribute<string> Label:= 'y'+year;}
+	unit<uint32> gisco_grids: storagename = "%projdir%/data_mutations/grid_1km_surf.gpkg", storagetype = "gdal.vect", dialogdata = "LambertEA" {
+		attribute<eea_grids/pm10_p904_time_2012_2023> pm10_rel:= rlookup(GRD_ID, eea_grids/pm10_p904_time_2012_2023/GRD_ID);
+		attribute<eea_grids/pm25_avg_time_2007_2024>  pm25_rel:= rlookup(GRD_ID, eea_grids/pm25_avg_time_2007_2024/GRD_ID);
+		attribute<eea_grids/o3_p932_time_2012_2023>   o3_rel:= rlookup(GRD_ID, eea_grids/o3_p932_time_2012_2023/GRD_ID);
+		attribute<eea_grids/no2_avg_time_2010_2023>   no2_rel:= rlookup(GRD_ID, eea_grids/no2_avg_time_2010_2023/GRD_ID);
+		
+		container pm10_vals:= for_each_nedv(eea_years/label, 'float64(eea_grids/pm10_p904_time_2012_2023/pm10_p904_'+eea_years/year+'[pm10_rel])', gisco_grids, float64);
+		container pm25_vals:= for_each_nedv(eea_years/label, 'float64(eea_grids/pm25_avg_time_2007_2024/pm25_avg_'+eea_years/year+'[pm25_rel])', gisco_grids, float64);
+		container o3_vals:= for_each_nedv(eea_years/label, 'float64(eea_grids/o3_p932_time_2012_2023/o3_p932_'+eea_years/year+'[o3_rel])', gisco_grids, float64);
+		container no2_vals:= for_each_nedv(eea_years/label, 'float64(eea_grids/no2_avg_time_2010_2023/no2_avg_'+eea_years/year+'[no2_rel])', gisco_grids, float64);
+	}
+	container eea_grids: storagename = "%projdir%/data_mutations/chris_eea_grid.gpkg", storagetype = "gdal.vect" {
+		unit<uint32> pm10_p904_time_2012_2023;
+		unit<uint32> pm25_avg_time_2007_2024;
+		unit<uint32> o3_p932_time_2012_2023;
+		unit<uint32> no2_avg_time_2010_2023;
+	}
+	
+	unit<uint32> ESTAT_census_2021_gpkg: storagename = "%projdir%/data_mutations/ESTAT_Census_2021_V3.gpkg", storagetype = "gdal.vect", dialogdata = "LambertEA", storagereadonly = "True";
 	
 	unit<uint32> PatchList : nrofrows = 10
 	{
@@ -106,20 +145,28 @@ container mutations {
 	unit<wpoint> exp_grids:= tg {
 		attribute<float32> pop_within_120km:= float32(road_transport_performance/POP_withi2)[tg/rtp_rel], storagename = "%projdir%/inputs/regio_03_rp_pop_within_120km.tif", storagetype = "gdalwrite.grid";
 		attribute<float32> pop_within_90m:=  float32(road_transport_performance/POP_withi1)[tg/rtp_rel], storagename = "%projdir%/inputs/regio_03_rp_pop_within_90m.tif", storagetype = "gdalwrite.grid";
-		attribute<float32> download_mbps_2019:= float32(broadband_speeds_2019/avg_d_mbps[bbs_2019_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2019.tif", storagetype = "gdalwrite.grid";
-		attribute<float32> download_mbps_2020:= float32(broadband_speeds_2020/avg_d_mbps[bbs_2020_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2020.tif", storagetype = "gdalwrite.grid";
-		attribute<float32> download_mbps_2021:= float32(broadband_speeds_2021/avg_d_mbps[bbs_2021_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2021.tif", storagetype = "gdalwrite.grid";
-		attribute<float32> download_mbps_2022:= float32(broadband_speeds_2022/avg_d_mbps[bbs_2022_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2022.tif", storagetype = "gdalwrite.grid";
-		attribute<float32> download_mbps_2023:= float32(broadband_speeds_2023/avg_d_mbps[bbs_2023_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2023.tif", storagetype = "gdalwrite.grid";
-		attribute<float32> download_mbps_2024:= float32(broadband_speeds_2024/avg_d_mbps[bbs_2024_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2024.tif", storagetype = "gdalwrite.grid";
-		attribute<float32> download_mbps_2025:= float32(broadband_speeds_2025/avg_d_mbps[bbs_2025_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2025.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> fixed_download_mbps_2019:= float32(fixed_broadband_speeds_2019/avg_d_mbps[fbbs_2019_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2019.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> fixed_download_mbps_2020:= float32(fixed_broadband_speeds_2020/avg_d_mbps[fbbs_2020_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2020.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> fixed_download_mbps_2021:= float32(fixed_broadband_speeds_2021/avg_d_mbps[fbbs_2021_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2021.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> fixed_download_mbps_2022:= float32(fixed_broadband_speeds_2022/avg_d_mbps[fbbs_2022_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2022.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> fixed_download_mbps_2023:= float32(fixed_broadband_speeds_2023/avg_d_mbps[fbbs_2023_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2023.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> fixed_download_mbps_2024:= float32(fixed_broadband_speeds_2024/avg_d_mbps[fbbs_2024_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2024.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> fixed_download_mbps_2025:= float32(fixed_broadband_speeds_2025/avg_d_mbps[fbbs_2025_rel]),  storagename = "%projdir%/inputs/avg_download_fixed_mbps_2025.tif", storagetype = "gdalwrite.grid";
+		
+		attribute<float32> mobile_download_mbps_2019:= float32(mobile_broadband_speeds_2019/avg_d_mbps[mbbs_2019_rel]),  storagename = "%projdir%/inputs/avg_download_mobile_mbps_2019.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> mobile_download_mbps_2020:= float32(mobile_broadband_speeds_2020/avg_d_mbps[mbbs_2020_rel]),  storagename = "%projdir%/inputs/avg_download_mobile_mbps_2020.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> mobile_download_mbps_2021:= float32(mobile_broadband_speeds_2021/avg_d_mbps[mbbs_2021_rel]),  storagename = "%projdir%/inputs/avg_download_mobile_mbps_2021.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> mobile_download_mbps_2022:= float32(mobile_broadband_speeds_2022/avg_d_mbps[mbbs_2022_rel]),  storagename = "%projdir%/inputs/avg_download_mobile_mbps_2022.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> mobile_download_mbps_2023:= float32(mobile_broadband_speeds_2023/avg_d_mbps[mbbs_2023_rel]),  storagename = "%projdir%/inputs/avg_download_mobile_mbps_2023.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> mobile_download_mbps_2024:= float32(mobile_broadband_speeds_2024/avg_d_mbps[mbbs_2024_rel]),  storagename = "%projdir%/inputs/avg_download_mobile_mbps_2024.tif", storagetype = "gdalwrite.grid";
+		attribute<float32> mobile_download_mbps_2025:= float32(mobile_broadband_speeds_2025/avg_d_mbps[mbbs_2025_rel]),  storagename = "%projdir%/inputs/avg_download_mobile_mbps_2025.tif", storagetype = "gdalwrite.grid";
 		
 		attribute<float32> max_avg_download_mbps_3y:= 
-			isdefined(/broadband_speeds_2023/avg_d_mbps[bbs_2023_rel]) || isdefined(/broadband_speeds_2024/avg_d_mbps[bbs_2024_rel]) || isdefined(/broadband_speeds_2025/avg_d_mbps[bbs_2025_rel]) ?
+			isdefined(/fixed_broadband_speeds_2023/avg_d_mbps[fbbs_2023_rel]) || isdefined(/fixed_broadband_speeds_2024/avg_d_mbps[fbbs_2024_rel]) || isdefined(/fixed_broadband_speeds_2025/avg_d_mbps[fbbs_2025_rel]) ?
 			float32(max_elem(
-				makedefined(/broadband_speeds_2023/avg_d_mbps[bbs_2023_rel], 0d), 
-				makedefined(/broadband_speeds_2024/avg_d_mbps[bbs_2024_rel], 0d), 
-				makedefined(/broadband_speeds_2025/avg_d_mbps[bbs_2025_rel], 0d)
+				makedefined(/fixed_broadband_speeds_2023/avg_d_mbps[fbbs_2023_rel], 0d), 
+				makedefined(/fixed_broadband_speeds_2024/avg_d_mbps[fbbs_2024_rel], 0d), 
+				makedefined(/fixed_broadband_speeds_2025/avg_d_mbps[fbbs_2025_rel], 0d)
 			))
 			: 0f / 0f, storagename = "%projdir%/inputs/max_avg_download_fixed_mbps_3y.tif", storagetype = "gdalwrite.grid";
 		attribute<float32> census21_nat_tot:= max_elem(float32(ESTAT_census_2021_gpkg/NAT)[ESTAT_gpkg_rel], 0f), storagename = "%projdir%/inputs/census21_nat_tot.tif", storagetype = "gdalwrite.grid";
@@ -137,6 +184,11 @@ container mutations {
 			, storagename = "%projdir%/inputs/housing21_rental_price.tif", storagetype = "gdalwrite.grid";
 		attribute<float32> housing_sale_price:= isnull(smear/addition_rel) ? LAU2021_patched/sales_price[LAU21_patched_rel] : 0.5f * (LAU2021_patched/sales_price[LAU21_patched_rel] + LAU2021_patched/sales_price[smear/addition_rel])
 			, storagename = "%projdir%/inputs/housing21_sales_price.tif", storagetype = "gdalwrite.grid";
+			
+		container pm10_grids:= for_each_nedvat(eea_years/label, '/gisco_grids/pm10_vals/'+eea_years/label+'[gisco_rel]', tg, float64, '%projdir%/inputs/eea_avg_pm10_p904_'+eea_years/year+'.tif', 'gdalwrite.grid');
+		container pm25_grids:= for_each_nedvat(eea_years/label, '/gisco_grids/pm25_vals/'+eea_years/label+'[gisco_rel]', tg, float64, '%projdir%/inputs/eea_avg_pm25_'+eea_years/year+'.tif', 'gdalwrite.grid');
+		container o3_grids:= for_each_nedvat(eea_years/label, '/gisco_grids/o3_vals/'+eea_years/label+'[gisco_rel]', tg, float64, '%projdir%/inputs/eea_avg_o3_p932_'+eea_years/year+'.tif', 'gdalwrite.grid');
+		container no2_grids:= for_each_nedvat(eea_years/label, '/gisco_grids/no2_vals/'+eea_years/label+'[gisco_rel]', tg, float64, '%projdir%/inputs/eea_avg_no2_'+eea_years/year+'.tif', 'gdalwrite.grid');
 		//attribute<float32> rental_prices
 	}
 	//unit<uint32> exp_points:= 

@@ -99,3 +99,26 @@ avg_download_fixed_2025;D:\projdir\Aggregator_FRAs\inputs\avg_download_fixed_mbp
 min_degurba;D:\projdir\Aggregator_FRAs\inputs\DGUR_LEVEL2_GRD_1KM_2021.tif;grid;min;0;
 estat_access_education_2026;D:\projdir\Aggregator_FRAs\inputs\euro_access_education_2026_CAR_S_1000m_v2026_10.tif;grid;mean;1;max_elem(in_values, 0d)
 estat_access_healthcare_2026;D:\projdir\Aggregator_FRAs\inputs\euro_access_healthcare_2026_CAR_S_1000m_v2026_10.tif;grid;mean;1;max_elem(in_values, 0d)
+avg_download_mobile_2019;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2019.tif;grid;mean;1;
+avg_download_mobile_2020;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2020.tif;grid;mean;1;
+avg_download_mobile_2021;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2021.tif;grid;mean;1;
+avg_download_mobile_2022;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2022.tif;grid;mean;1;
+avg_download_mobile_2023;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2023.tif;grid;mean;1;
+avg_download_mobile_2024;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2024.tif;grid;mean;1;
+avg_download_mobile_2025;D:\projdir\Aggregator_FRAs\inputs\avg_download_mobile_mbps_2025.tif;grid;mean;1;
+eea_avg_pm10_p904_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2020.tif;grid;mean;1;
+eea_avg_pm10_p904_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2021.tif;grid;mean;1;
+eea_avg_pm10_p904_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2022.tif;grid;mean;1;
+eea_avg_pm10_p904_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm10_p904_2023.tif;grid;mean;1;
+eea_avg_pm25_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm25_2020.tif;grid;mean;1;
+eea_avg_pm25_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm25_2021.tif;grid;mean;1;
+eea_avg_pm25_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm25_2022.tif;grid;mean;1;
+eea_avg_pm25_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_pm25_2023.tif;grid;mean;1;
+eea_avg_no2_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2020.tif;grid;mean;1;
+eea_avg_no2_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2021.tif;grid;mean;1;
+eea_avg_no2_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2022.tif;grid;mean;1;
+eea_avg_no2_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_no2_2023.tif;grid;mean;1;
+eea_avg_o3_p932_2020;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2020.tif;grid;mean;1;
+eea_avg_o3_p932_2021;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2021.tif;grid;mean;1;
+eea_avg_o3_p932_2022;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2022.tif;grid;mean;1;
+eea_avg_o3_p932_2023;D:\projdir\Aggregator_FRAs\inputs\eea_avg_o3_p932_2023.tif;grid;mean;1;
